@@ -18,6 +18,32 @@ Board::~Board() {
     }
 }
 
+//move all the pieces of the board besides the wall
+void Board::move() {
+    //count and increment move every time it's called (breed)
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
+            // move all the preditors
+            //...code goes here
+            if(_board[i][j] != nullptr) {
+                char type = _board[i][j]->get_face();
+                if(type =='o') {
+                    //take 'S' as center, notations Q-W-E-A-S-D-Z-X-C represent 1-2-3-4-0-6-7-8-9
+                    cout << "oh\n";
+                    int direction = give_direction(i, j);
+                    //move or stay
+                    // store current position in temp
+                    Organism* temp = _board[i][j];
+                    temp->move(direction);
+                    //                    _board[i][j] = nullptr;
+                }
+                
+            }
+            // move all the preys
+        }
+    }
+}
+
 // place all organisms on the board: walls, preditors, preys
 void Board::init_board() {
     init_walls();
@@ -77,19 +103,64 @@ bool Board::is_avaialable(int row, int col) {
     return _board[row][col] == nullptr;
 }
 
+//determine which direction the organism can move
+//take 'S' as center, notations Q-W-E-A-S-D-Z-X-C represent 1-2-3-4-0-6-7-8-9
+int Board::give_direction(int row, int col) {
+    int count = 0;
+    vector<int> v;
+    //check if any of the four direction is free. If free, pop its number into vector
+    if (_board[row-1][col-1] == nullptr) {
+        v.push_back(1);
+        count++;
+    } else if (_board[row-1][col] == nullptr) {
+        v.push_back(2);
+        count++;
+    } else if (_board[row-1][col+1] == nullptr) {
+        v.push_back(3);
+        count++;
+    } else if (_board[row][col-1] == nullptr) {
+        v.push_back(4);
+        count++;
+    } else if (_board[row][col+1] == nullptr) {
+        v.push_back(6); //skip 5 because 5 is the current position, accounted as unmove
+        count++;
+    } else if (_board[row+1][col-1] == nullptr) {
+        v.push_back(7);
+        count++;
+    } else if (_board[row+1][col] == nullptr) {
+        v.push_back(8);
+        count++;
+    } else if (_board[row+1][col+1] == nullptr){
+        v.push_back(9);
+        count++;
+    }
+    // cannot move
+    if (count == 0) {
+        return 0;
+    }
+    
+    //seeding a random number between 0 - count to pick a random vector slot
+    srand(static_cast<unsigned int>(time(0)));
+    int random = rand() % count;
+    for (int i = 0; i < random; i++) {
+        v.pop_back();
+    }
+    return v.front();
+}
+
 //output the board
 void Board::print_board() {
     for (int i = 0; i < ROW; i++) {
         for (int j = 0; j < COL; j++) {
             if (_board[i][j] != nullptr) {
-                std::cout << _board[i][j]->get_face() << " ";}
+                cout << _board[i][j]->get_face() << " ";}
             else {
-                std::cout << " " << " ";
+                cout << " " << " ";
             }
         }
-        std::cout << endl;
+        cout << endl;
     }
-    std::cout << endl;
+    cout << endl;
 }
 
 

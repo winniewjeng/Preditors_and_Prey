@@ -9,7 +9,9 @@ int main(int argc, const char * argv[]) {
     Board b;
     b.init_board();
     b.print_board();
-    cout << "be";
+    b.move();
+    b.print_board();
+    cout << "bye";
 //    for (int i = 0; i < 55; i++){
 //        int rand();
 //        cout << rand() % (ROW - 1 ) + 1 << endl;}

@@ -7,7 +7,7 @@ class Organism {
 
 public:
     Organism() : _row(10), _col(10), _generic_face('?') {}
-    virtual void move() {}
+    virtual void move(int direction) {}
     virtual char get_face() {return _generic_face;}
     
 private:
