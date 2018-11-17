@@ -6,14 +6,14 @@
 class Organism {
 
 public:
-    Organism() : _row(10), _col(10), _face('o') {}
+    Organism() : _row(10), _col(10), _generic_face('?') {}
     virtual void move() {}
-    virtual char get_face() {return _face;}
+    virtual char get_face() {return _generic_face;}
     
 private:
     int _row;
     int _col;
-    char _face;
+    char _generic_face;
 };
 
 #endif /* Organism_hpp */

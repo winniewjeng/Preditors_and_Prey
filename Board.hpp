@@ -3,9 +3,12 @@
 #define Board_hpp
 #include <iostream>
 #include "Wall.hpp"
+#include "Prey.hpp"
+#include <cstdlib>
+#include <ctime>
 
-const int ROW = 7;
-const int COL = 7;
+const int ROW = 20;
+const int COL = 20;
 
 class Organism;
 
@@ -19,7 +22,9 @@ public:
     void print_board();
     void init_board(); //place all the organisms on board
     void init_walls();
+    void init_preys();
     void init_preditors();
+    bool is_avaialable(int row, int col);
     char get_face() {return _board_face;}
     
 private:
