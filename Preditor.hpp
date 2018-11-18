@@ -15,7 +15,7 @@ public:
     Preditor() : _preditor_face('X') {}
     Preditor(int i, int j) : _row(i), _col(j), _preditor_face('X') {}
     // preditor move inherits from Organism
-    void move(int direction) {}
+    void move(int direction);
     // preditor inherits get_face from Organism
     char get_face() {return _preditor_face;}
     int get_row() {return _row;}
