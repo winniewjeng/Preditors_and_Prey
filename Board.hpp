@@ -4,11 +4,12 @@
 #include <iostream>
 #include "Wall.hpp"
 #include "Prey.hpp"
+#include "Preditor.hpp"
 #include <cstdlib>
 #include <ctime>
 
-const int ROW = 6;
-const int COL = 6;
+const int ROW = 10;
+const int COL = 10;
 
 class Organism;
 
@@ -37,6 +38,8 @@ public:
 private:
     Organism* _board[ROW][COL];
     char _board_face;
+    int _num_preys; //number of preys
+    int _num_preditors;
 };
 
 

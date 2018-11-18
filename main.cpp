@@ -6,11 +6,19 @@ using namespace std;
 int main(int argc, const char * argv[]) {
     // insert code here...
     cout << "Hello, World!\n";
+    
     Board b;
     b.init_board();
     b.print_board();
-    b.move();
-    b.print_board();
+    
+    string play = "\n";
+    while (play != "Q") {
+        b.move();
+        b.print_board();
+        getline(cin, play);
+    }
+    
+    
     cout << "bye";
 //    for (int i = 0; i < 55; i++){
 //        int rand();

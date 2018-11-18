@@ -57,6 +57,7 @@ void Board::init_board() {
     init_nulls();
     init_walls();
     init_preys();
+    init_preditors();
 }
 
 void Board::init_nulls() {
@@ -81,18 +82,19 @@ void Board::init_walls() {
 // initialize N number of preys to fill the Board
 void Board::init_preys() {
     //depending on the board size, generate N number of preys
-    int prey_nums;
+    //    int prey_nums;
     if (ROW * COL / 10 < 4) {
-        prey_nums = 1;
+        _num_preys = 1;
     } else {
-        prey_nums = ROW * COL / 10 + 1;
+        //_num_preys = 1; //for testing purpose
+        _num_preys = ROW * COL / 10 + 1;
     }
     
     //seeding a random number
     srand(static_cast<unsigned int>(time(0)));
     
     // place N number of preys randomly on the board
-    for (int i = 0; i < prey_nums; i++) {
+    for (int i = 0; i < _num_preys; i++) {
         int row, col;
         do {
             row = rand() % (ROW - 1 ) + 1; // generate a random number i between 1 and ROW - 1
@@ -103,14 +105,24 @@ void Board::init_preys() {
     }
 }
 
-//NOT YET IMPLEMENTED
 // randomly initialize n number of preditors
 void Board::init_preditors() {
-    for (int i = 0; i < ROW; i++) {
-        for (int j = 0; j < COL; j++) {
-            if(_board[i][j] == nullptr) {
-            }
-        }
+    if (_num_preys < 8) {
+        _num_preditors = 1;
+    } else if (_num_preys >= 8 && _num_preys < 50 ) {
+        _num_preditors = 3;
+    } else {
+        _num_preditors = _num_preys / 10;
+    }
+    
+    for (int i = 0; i < _num_preditors; i++) {
+        int row, col;
+        do {
+            row = rand() % (ROW - 1 ) + 1; // generate a random number i between 1 and ROW - 1
+            col = rand() % (COL - 1 ) + 1; // and a number j between 1 and COL - 1
+        } while(!is_avaialable(row, col)); // If i, j occupied, generate new set of i and j
+        // place the prey on board
+        _board[row][col] = new Preditor(row, col);
     }
 }
 
@@ -137,7 +149,7 @@ int Board::give_direction(int row, int col) {
     for (int i = 0; i < random; i++) {
         v.pop_back();
     }
-    cout << "give_direction: "<< v.back() << endl;
+    //    cout << "give_direction: "<< v.back() << endl;
     return v.back();
 }
 
@@ -170,17 +182,17 @@ vector<int> Board::possible_directions(int row, int col) {
         v.push_back(9);
     }
     
-    for (int i = 0; i < v.size(); i++) {
-        cout << v.data()[i] << " ";
-    }
-    cout << endl;
+    //    for (int i = 0; i < v.size(); i++) {
+    //        cout << v.data()[i] << " ";
+    //    }
+    //    cout << endl;
     return v;
 }
 
 //correct and implemented
 int Board::get_random(int count) {
     //    srand(static_cast<unsigned int>(time(0)));
-    return rand() % (count - 1);
+    return rand() % (count); //////////-1? +1?
 }
 
 //output the board
@@ -192,20 +204,9 @@ void Board::print_board() {
             else {
                 cout << " " << " ";
             }
-            //        }
-            //        cout << endl;
         }
         cout << endl;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
 
 vector<Organism*> Board::i_moved(Organism* me) {
