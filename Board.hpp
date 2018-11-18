@@ -28,7 +28,8 @@ public:
     bool is_avaialable(int row, int col);
     char get_face() {return _board_face;}
     int give_direction(int row, int col);
-    vector<int> possible_directions(int row, int col);
+    vector<int> possible_prey_directions(int row, int col);
+    vector<int> possible_preditor_directions(int row, int col);
     void print_board();
     int get_random(int count);
 //    void store_flag(int i, int j);

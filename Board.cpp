@@ -28,9 +28,24 @@ void Board::move() {
         for (int j = 1; j < COL - 1; j++) {
             if (!has_moved(_board[i][j], v)) {
                 // move all the preditors
-                
+                if (_board[i][j]->get_face() == 'X') {
+                    //cpying preditor's junk to a temp variable
+                    Organism* temp(_board[i][j]);
+                    //move preditor's junk over to a new position
+                    int direction = give_direction(i, j);
+                    temp->move(direction);
+                    //house keeping and cleaning the old position
+                    _board[i][j]= nullptr;
+                    _board[i][j] = new Organism(i, j);
+                    //the new position gets the preditor junk of the old position
+                    _board[temp->get_row()][temp->get_col()] = temp;
+                    //store the new position in vector to prevent double move
+                    v = i_moved(_board[temp->get_row()][temp->get_col()]);
+                    //clear temp junk
+                    temp = nullptr;
+                }
                 // move all the preys
-                if(_board[i][j]->get_face() == 'o') {
+                else if(_board[i][j]->get_face() == 'o') {
                     //take 'S' as center, notations Q-W-E-A-S-D-Z-X-C represent 1-2-3-4-0-6-7-8-9
                     int direction = give_direction(i, j);
                     //move or stay: store current position in temp
@@ -38,9 +53,9 @@ void Board::move() {
                     //cout << "row: " << temp->get_row() << ", col: " << temp->get_col() << endl; //testing purpose
                     temp->move(direction);
                     //cout << "row: " << temp->get_row() << ", col: " << temp->get_col() << endl; //testing purpose
-                    _board[i][j]= nullptr;
-                    _board[i][j] = new Organism(i, j);
-                    _board[temp->get_row()][temp->get_col()] = temp;
+                    _board[i][j]= nullptr; //free the position of old ptr
+                    _board[i][j] = new Organism(i, j); //replace position with a new blank ptr
+                    _board[temp->get_row()][temp->get_col()] = temp; //update the new position with the new prey ptr occupant
                     //push the moved Organism into vector to prevent double move
                     v = i_moved(_board[temp->get_row()][temp->get_col()]);
                     temp = nullptr; //free temp ptr
@@ -138,7 +153,13 @@ bool Board::is_avaialable(int row, int col) {
 // notations Q-W-E-A-S-D-Z-X-C represent positions 1-2-3-4-0-6-7-8-9
 int Board::give_direction(int row, int col) {
     
-    vector<int> v = possible_directions(row, col);
+    vector<int> v;
+    
+    if (_board[row][col]->get_face() == 'X') {
+        v = possible_preditor_directions(row, col);
+    } else {
+        v = possible_prey_directions(row, col);
+    }
     // if cannot move, do not move, return 0
     if (v.empty()) {
         return 0;
@@ -155,8 +176,53 @@ int Board::give_direction(int row, int col) {
     return v.back();
 }
 
-//store all possible move positions inside a vector
-vector<int> Board::possible_directions(int row, int col) {
+//store all possible preditor move positions inside a vector
+vector<int> Board::possible_preditor_directions(int row, int col) {
+    //if any of the 8 directions is free, pop its number into vector
+    vector<int> v;
+    if (_board[row-1][col-1]->get_face() == ' ' ||
+        _board[row-1][col-1]->get_face() == 'o') {
+        v.push_back(1);
+    }
+    if (_board[row-1][col]->get_face() == ' ' ||
+        _board[row-1][col-1]->get_face() == 'o') {
+        v.push_back(2);
+    }
+    if (_board[row-1][col+1]->get_face() == ' ' ||
+        _board[row-1][col-1]->get_face() == 'o') {
+        v.push_back(3);
+    }
+    if (_board[row][col-1]->get_face() == ' ' ||
+        _board[row-1][col-1]->get_face() == 'o') {
+        v.push_back(4);
+    }
+    //skip 5 because 5 is the current position, accounted as unmove
+    if (_board[row][col+1]->get_face() == ' ' ||
+        _board[row-1][col-1]->get_face() == 'o') {
+        v.push_back(6);
+    }
+    if (_board[row+1][col-1]->get_face() == ' ' ||
+        _board[row-1][col-1]->get_face() == 'o') {
+        v.push_back(7);
+    }
+    if (_board[row+1][col]->get_face() == ' ' ||
+        _board[row-1][col-1]->get_face() == 'o') {
+        v.push_back(8);
+    }
+    if (_board[row+1][col+1]->get_face() == ' ' ||
+        _board[row-1][col-1]->get_face() == 'o'){
+        v.push_back(9);
+    }
+    // testing purpose: print out the possible directions vector
+    //    for (int i = 0; i < v.size(); i++) {
+    //        cout << v.data()[i] << " ";
+    //    }
+    //    cout << endl;
+    return v;
+}
+
+//store all possible prey move positions inside a vector
+vector<int> Board::possible_prey_directions(int row, int col) {
     //if any of the 8 directions is free, pop its number into vector
     vector<int> v;
     if (_board[row-1][col-1]->get_face() == ' ') {
