@@ -7,8 +7,8 @@
 #include <cstdlib>
 #include <ctime>
 
-const int ROW = 20;
-const int COL = 20;
+const int ROW = 6;
+const int COL = 6;
 
 class Organism;
 
@@ -19,14 +19,20 @@ public:
     Board();
     ~Board();
     void move(); //keep track of every organism on the board
-    void init_board(); //place all the organisms on board
+    void init_board(); //init board & place all the organisms on board
+    void init_nulls();
     void init_walls();
     void init_preys();
     void init_preditors();
     bool is_avaialable(int row, int col);
     char get_face() {return _board_face;}
     int give_direction(int row, int col);
+    vector<int> possible_directions(int row, int col);
     void print_board();
+    int get_random(int count);
+//    void store_flag(int i, int j);
+    vector<Organism*> i_moved(Organism* me); //container for all the moved pieces
+    bool has_moved(Organism* o, vector<Organism*> v); //if Organism has moved, don't move
     
 private:
     Organism* _board[ROW][COL];
