@@ -1,4 +1,3 @@
-
 #include "Board.hpp"
 
 Board::Board() {
@@ -76,7 +75,7 @@ void Board::swap_spots(vector<Organism*> v, int i, int j) {
     //store the new position in vector to prevent double move
     v = i_moved(_board[temp->get_row()][temp->get_col()]);
     //clear temp junk
-//    delete temp;
+    //    delete temp;
     temp = nullptr; //free temp ptr
     
 }
