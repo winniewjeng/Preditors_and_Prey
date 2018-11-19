@@ -23,47 +23,51 @@ void Board::move() {
     //vector keeping track of & preveting double move within one move cycle
     vector<Organism*> v;
     
-    //count and increment move every time it's called (breed)
+    // move all the preditors
     for (int i = 1; i < ROW - 1; i++) {
         for (int j = 1; j < COL - 1; j++) {
             if (!has_moved(_board[i][j], v)) {
                 // move all the preditors
                 if (_board[i][j]->get_face() == 'X') {
-                    //cpying preditor's junk to a temp variable
-                    Organism* temp(_board[i][j]);
-                    //move preditor's junk over to a new position
-                    int direction = give_direction(i, j);
-                    temp->move(direction);
-                    //house keeping and cleaning the old position
-                    _board[i][j]= nullptr;
-                    _board[i][j] = new Organism(i, j);
-                    //the new position gets the preditor junk of the old position
-                    _board[temp->get_row()][temp->get_col()] = temp;
-                    //store the new position in vector to prevent double move
-                    v = i_moved(_board[temp->get_row()][temp->get_col()]);
-                    //clear temp junk
-                    temp = nullptr;
+                    //take care of preditor ptr movement
+                    swap_spots(v, i, j);
                 }
                 // move all the preys
                 else if(_board[i][j]->get_face() == 'o') {
-                    //take 'S' as center, notations Q-W-E-A-S-D-Z-X-C represent 1-2-3-4-0-6-7-8-9
-                    int direction = give_direction(i, j);
-                    //move or stay: store current position in temp
-                    Organism* temp(_board[i][j]);
-                    //cout << "row: " << temp->get_row() << ", col: " << temp->get_col() << endl; //testing purpose
-                    temp->move(direction);
-                    //cout << "row: " << temp->get_row() << ", col: " << temp->get_col() << endl; //testing purpose
-                    _board[i][j]= nullptr; //free the position of old ptr
-                    _board[i][j] = new Organism(i, j); //replace position with a new blank ptr
-                    _board[temp->get_row()][temp->get_col()] = temp; //update the new position with the new prey ptr occupant
-                    //push the moved Organism into vector to prevent double move
-                    v = i_moved(_board[temp->get_row()][temp->get_col()]);
-                    temp = nullptr; //free temp ptr
+                    //take care of prey ptr movement
+                    swap_spots(v, i, j);
                 }
             }
         }
-        // move all the preys
     }
+    _generation++;
+    cout << "Generation "<< _generation << endl;
+    if (_generation % 3 == 0) {
+        //breed preys & kill preditor
+    }
+    
+}
+
+void Board::swap_spots(vector<Organism*> v, int i, int j) {
+    //take 'S' as center, notations Q-W-E-A-S-D-Z-X-C represent 1-2-3-4-0-6-7-8-9
+    int direction = give_direction(i, j);
+    //move or stay: store current position in temp
+    //cpying preditor's junk to the temp variable
+    Organism* temp(_board[i][j]);
+    //cout << "row: " << temp->get_row() << ", col: " << temp->get_col() << endl; //testing purpose
+    //move preditor's junk over to a new position
+    temp->move(direction);
+    //cout << "row: " << temp->get_row() << ", col: " << temp->get_col() << endl; //testing purpose
+    //house keeping and cleaning the old position
+    _board[i][j]= nullptr; //free the position of old ptr
+    _board[i][j] = new Organism(i, j); //replace position with a new blank ptr
+    //the new position gets the preditor junk of the old position
+    _board[temp->get_row()][temp->get_col()] = temp; //update the new position with the new prey ptr occupant
+    //push the moved Organism into vector to prevent double move
+    //store the new position in vector to prevent double move
+    v = i_moved(_board[temp->get_row()][temp->get_col()]);
+    //clear temp junk
+    temp = nullptr; //free temp ptr
     
 }
 

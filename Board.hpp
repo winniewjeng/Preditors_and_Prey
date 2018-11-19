@@ -8,8 +8,8 @@
 #include <cstdlib>
 #include <ctime>
 
-const int ROW = 10;
-const int COL = 10;
+const int ROW = 7;
+const int COL = 7;
 
 class Organism;
 
@@ -19,7 +19,9 @@ class Board {
 public:
     Board();
     ~Board();
-    void move(); //keep track of every organism on the board
+    void move(); //keep track of every organism movement on board
+    void swap_spots(vector<Organism*> v, int i, int j); //ptrs manipulation
+    void breed(); //double the preys every 3 generations
     void init_board(); //init board & place all the organisms on board
     void init_nulls();
     void init_walls();
@@ -41,6 +43,7 @@ private:
     char _board_face;
     int _num_preys; //number of preys
     int _num_preditors;
+    int _generation;
 };
 
 
