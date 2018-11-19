@@ -115,7 +115,7 @@ void Board::init_preys() {
         _num_preys = 1;
     } else {
         //_num_preys = 1; //for testing purpose
-        _num_preys = ROW * COL / 10 + 1;
+        _num_preys = ROW * COL / 20;
     }
     
     // place N number of preys randomly on the board
@@ -125,21 +125,36 @@ void Board::init_preys() {
     }
 }
 
+// if there is empty space on board, then return true
+bool Board::has_empty() {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
+            if (_board[i][j]->get_face() != ' ') {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+// if board has avaialable space then breed, if not then don't
 void Board::breed_prey(int _num_preys) {
-    
-    //seeding a random number
-    srand(static_cast<unsigned int>(time(0)));
-    
-    int row, col;
-    do {
-        // generate a random number i between 1 and ROW - 1
-        row = rand() % (ROW - 1 ) + 1;
-        // and a number j between 1 and COL - 1
-        col = rand() % (COL - 1 ) + 1;
-    } while(!is_avaialable(row, col)); // If i, j occupied, get new set
-    // place the prey on board
-    _board[row][col] = new Prey(row, col);
-    
+    if (has_empty()) {
+//        cout << has_empty() << " is has_empty()" << endl;
+        //seeding a random number
+        srand(static_cast<unsigned int>(time(0)));
+        
+        int row, col;
+        // this loop breaks
+        
+        do {
+            // generate a random number i between 1 and ROW - 1
+            row = rand() % (ROW - 1) + 1;
+            // and a number j between 1 and COL - 1
+            col = rand() % (COL - 1) + 1;
+        } while(!is_avaialable(row, col)); // If i, j occupied, get new set
+        // place the prey on board
+        _board[row][col] = new Prey(row, col);
+    }
 }
 
 // randomly initialize n number of preditors
