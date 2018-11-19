@@ -26,6 +26,7 @@ public:
     void init_nulls();
     void init_walls();
     void init_preys();
+    void breed_prey(int _num_preys);
     void init_preditors();
     bool is_avaialable(int row, int col);
     char get_face() {return _board_face;}
@@ -42,7 +43,7 @@ private:
     Organism* _board[ROW][COL];
     char _board_face;
     int _num_preys; //number of preys
-    int _num_preditors;
+    int _num_preditors; //not used
     int _generation;
 };
 

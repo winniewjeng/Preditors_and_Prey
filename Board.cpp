@@ -36,6 +36,10 @@ void Board::move() {
                 else if(_board[i][j]->get_face() == 'o') {
                     //take care of prey ptr movement
                     swap_spots(v, i, j);
+                    // breed
+                    if (_generation % 5 == 0 && _generation != 0) {
+                        breed_prey(1);
+                    }
                 }
             }
         }
@@ -44,6 +48,7 @@ void Board::move() {
     cout << "Generation "<< _generation << endl;
     if (_generation % 3 == 0) {
         //breed preys & kill preditor
+        
     }
     
 }
@@ -62,6 +67,7 @@ void Board::swap_spots(vector<Organism*> v, int i, int j) {
     _board[i][j]= nullptr; //free the position of old ptr
     _board[i][j] = new Organism(i, j); //replace position with a new blank ptr
     //the new position gets the preditor junk of the old position
+    _board[temp->get_row()][temp->get_col()] = nullptr;
     _board[temp->get_row()][temp->get_col()] = temp; //update the new position with the new prey ptr occupant
     //push the moved Organism into vector to prevent double move
     //store the new position in vector to prevent double move
@@ -109,21 +115,29 @@ void Board::init_preys() {
         _num_preys = ROW * COL / 10 + 1;
     }
     
+    // place N number of preys randomly on the board
+    for (int i = 0; i < _num_preys; i++) {
+        //breed "_num_preys" number of preys
+        breed_prey(_num_preys);
+
+    }
+}
+
+void Board::breed_prey(int _num_preys) {
+    
     //seeding a random number
     srand(static_cast<unsigned int>(time(0)));
     
-    // place N number of preys randomly on the board
-    for (int i = 0; i < _num_preys; i++) {
-        int row, col;
-        do {
-            // generate a random number i between 1 and ROW - 1
-            row = rand() % (ROW - 1 ) + 1;
-            // and a number j between 1 and COL - 1
-            col = rand() % (COL - 1 ) + 1;
-        } while(!is_avaialable(row, col)); // If i, j occupied, get new set
-        // place the prey on board
-        _board[row][col] = new Prey(row, col);
-    }
+    int row, col;
+    do {
+        // generate a random number i between 1 and ROW - 1
+        row = rand() % (ROW - 1 ) + 1;
+        // and a number j between 1 and COL - 1
+        col = rand() % (COL - 1 ) + 1;
+    } while(!is_avaialable(row, col)); // If i, j occupied, get new set
+    // place the prey on board
+    _board[row][col] = new Prey(row, col);
+    
 }
 
 // randomly initialize n number of preditors

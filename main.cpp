@@ -9,13 +9,13 @@ int main(int argc, const char * argv[]) {
     
     Board b;
     b.init_board();
-    b.print_board();
+//    b.print_board();
     
     string play = "\n";
     while (play != "Q") {
-        b.move();
         b.print_board();
         getline(cin, play);
+        b.move();
     }
     
     
