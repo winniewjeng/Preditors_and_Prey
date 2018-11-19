@@ -185,32 +185,32 @@ vector<int> Board::possible_preditor_directions(int row, int col) {
         v.push_back(1);
     }
     if (_board[row-1][col]->get_face() == ' ' ||
-        _board[row-1][col-1]->get_face() == 'o') {
+        _board[row-1][col]->get_face() == 'o') {
         v.push_back(2);
     }
     if (_board[row-1][col+1]->get_face() == ' ' ||
-        _board[row-1][col-1]->get_face() == 'o') {
+        _board[row-1][col+1]->get_face() == 'o') {
         v.push_back(3);
     }
     if (_board[row][col-1]->get_face() == ' ' ||
-        _board[row-1][col-1]->get_face() == 'o') {
+        _board[row][col-1]->get_face() == 'o') {
         v.push_back(4);
     }
     //skip 5 because 5 is the current position, accounted as unmove
     if (_board[row][col+1]->get_face() == ' ' ||
-        _board[row-1][col-1]->get_face() == 'o') {
+        _board[row][col+1]->get_face() == 'o') {
         v.push_back(6);
     }
     if (_board[row+1][col-1]->get_face() == ' ' ||
-        _board[row-1][col-1]->get_face() == 'o') {
+        _board[row+1][col-1]->get_face() == 'o') {
         v.push_back(7);
     }
     if (_board[row+1][col]->get_face() == ' ' ||
-        _board[row-1][col-1]->get_face() == 'o') {
+        _board[row+1][col]->get_face() == 'o') {
         v.push_back(8);
     }
     if (_board[row+1][col+1]->get_face() == ' ' ||
-        _board[row-1][col-1]->get_face() == 'o'){
+        _board[row+1][col+1]->get_face() == 'o'){
         v.push_back(9);
     }
     // testing purpose: print out the possible directions vector
