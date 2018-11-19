@@ -37,7 +37,7 @@ public:
     int get_random(int count);
 //    void store_flag(int i, int j);
     vector<Organism*> i_moved(Organism* me); //container for all the moved pieces
-    bool has_moved(Organism* o, vector<Organism*> v); //if Organism has moved, don't move
+    bool has_moved(Organism* o, vector<Organism*>& v); //if Organism has moved, don't move
     
 private:
     Organism* _board[ROW][COL];

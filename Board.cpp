@@ -21,21 +21,22 @@ Board::~Board() {
 //move all the pieces of the board besides the wall
 void Board::move() {
     //vector keeping track of & preveting double move within one move cycle
-    vector<Organism*> v;
+    vector<Organism*> v_double_move;
     
     // move all the preditors
     for (int i = 1; i < ROW - 1; i++) {
         for (int j = 1; j < COL - 1; j++) {
-            if (!has_moved(_board[i][j], v)) {
+            
+            if (!has_moved(_board[i][j], v_double_move)) {
                 // move all the preditors
                 if (_board[i][j]->get_face() == 'X') {
                     //take care of preditor ptr movement
-                    swap_spots(v, i, j);
+                    swap_spots(v_double_move, i, j);
                 }
                 // move all the preys
                 else if(_board[i][j]->get_face() == 'o') {
                     //take care of prey ptr movement
-                    swap_spots(v, i, j);
+                    swap_spots(v_double_move, i, j);
                     // breed
                     if (_generation % 5 == 0 && _generation != 0) {
                         breed_prey(1);
@@ -45,6 +46,7 @@ void Board::move() {
         }
     }
     _generation++;
+    
     cout << "Generation "<< _generation << endl;
     if (_generation % 3 == 0) {
         //breed preys & kill preditor
@@ -53,6 +55,7 @@ void Board::move() {
     
 }
 
+//potentially erroneous
 void Board::swap_spots(vector<Organism*> v, int i, int j) {
     //take 'S' as center, notations Q-W-E-A-S-D-Z-X-C represent 1-2-3-4-0-6-7-8-9
     int direction = give_direction(i, j);
@@ -73,6 +76,7 @@ void Board::swap_spots(vector<Organism*> v, int i, int j) {
     //store the new position in vector to prevent double move
     v = i_moved(_board[temp->get_row()][temp->get_col()]);
     //clear temp junk
+//    delete temp;
     temp = nullptr; //free temp ptr
     
 }
@@ -119,7 +123,6 @@ void Board::init_preys() {
     for (int i = 0; i < _num_preys; i++) {
         //breed "_num_preys" number of preys
         breed_prey(_num_preys);
-
     }
 }
 
@@ -306,9 +309,10 @@ vector<Organism*> Board::i_moved(Organism* me) {
 
 //tells if an Organism has moved within one life cycle
 // (one loop through the entire Board)
-bool Board::has_moved(Organism* o, vector<Organism*> v) {
+bool Board::has_moved(Organism* organism, vector<Organism*>& v) {
     for (int i = 0; i < v.size(); i++) {
-        if (o == v.at(i)) {
+        if (organism == v.at(i)) {
+            v.clear();
             return true;
         }
     }
