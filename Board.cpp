@@ -25,7 +25,6 @@ void Board::move() {
     // move all the preditors
     for (int i = 1; i < ROW - 1; i++) {
         for (int j = 1; j < COL - 1; j++) {
-            
             if (!has_moved(_board[i][j], v_double_move)) {
                 // move all the preditors
                 if (_board[i][j]->get_face() == 'X') {
@@ -37,16 +36,17 @@ void Board::move() {
                     //take care of prey ptr movement
                     swap_spots(v_double_move, i, j);
                     // breed
-                    if (_generation % 5 == 0 && _generation != 0) {
+                    if (_generation % 2 == 0 && _generation != 0) {
                         breed_prey(1);
                     }
                 }
             }
         }
     }
-    _generation++;
     
     cout << "Generation "<< _generation << endl;
+    // increment the generation count
+    _generation++;
     if (_generation % 3 == 0) {
         //breed preys & kill preditor
         
@@ -111,22 +111,23 @@ void Board::init_walls() {
 void Board::init_preys() {
     //depending on the board size, generate N number of preys
     //    int prey_nums;
-    if (ROW * COL / 10 < 4) {
-        _num_preys = 1;
+    int num_preys;
+    if (ROW * COL / 10 < 40) {
+        num_preys = 1;
     } else {
         //_num_preys = 1; //for testing purpose
-        _num_preys = ROW * COL / 20;
+        num_preys = 20;
     }
     
     // place N number of preys randomly on the board
-    for (int i = 0; i < _num_preys; i++) {
+    for (int i = 0; i < num_preys; i++) {
         //breed "_num_preys" number of preys
-        breed_prey(_num_preys);
+        breed_prey(num_preys);
     }
 }
 
 // if there is empty space on board, then return true
-bool Board::has_empty() {
+bool Board::board_has_empty() {
     for (int i = 0; i < ROW; i++) {
         for (int j = 0; j < COL; j++) {
             if (_board[i][j]->get_face() != ' ') {
@@ -137,24 +138,32 @@ bool Board::has_empty() {
     return false;
 }
 // if board has avaialable space then breed, if not then don't
-void Board::breed_prey(int _num_preys) {
-    if (has_empty()) {
-//        cout << has_empty() << " is has_empty()" << endl;
-        //seeding a random number
-        srand(static_cast<unsigned int>(time(0)));
+void Board::breed_prey(int num_preys) {
+    
+    //seeding a random number
+    srand(static_cast<unsigned int>(time(0)));
+    
+    int row, col;
+    // this loop breaks
+    
+    // generate a random number i between 1 and ROW - 1
+    // and a number j between 1 and COL - 1
+    for (int i = 0; i < num_preys; i++) {
+        row = rand() % (ROW - 1) + 1;
+        col = rand() % (COL - 1) + 1;
         
-        int row, col;
-        // this loop breaks
-        
-        do {
-            // generate a random number i between 1 and ROW - 1
-            row = rand() % (ROW - 1) + 1;
-            // and a number j between 1 and COL - 1
-            col = rand() % (COL - 1) + 1;
-        } while(!is_avaialable(row, col)); // If i, j occupied, get new set
-        // place the prey on board
-        _board[row][col] = new Prey(row, col);
+        if (is_avaialable(row, col)) {
+            _board[row][col] = new Prey(row, col);
+        } else if (board_has_empty()) {
+            cout << "boop" << endl;
+//            while (!is_avaialable(row, col)) {
+//                row = rand() % (ROW - 1) + 1;
+//                col = rand() % (COL - 1) + 1;
+//            }
+//            _board[row][col] = new Prey(row, col);
+        }
     }
+    
 }
 
 // randomly initialize n number of preditors
@@ -169,14 +178,20 @@ void Board::init_preditors() {
     
     for (int i = 0; i < _num_preditors; i++) {
         int row, col;
+        int try_direction = 0;
         do {
+            
             // generate a random number i between 1 and ROW - 1
             row = rand() % (ROW - 1 ) + 1;
             // and a number j between 1 and COL - 1
             col = rand() % (COL - 1 ) + 1;
-        } while(!is_avaialable(row, col)); // If i, j occupied, get new set
-        // place the prey on board
-        _board[row][col] = new Preditor(row, col);
+            try_direction++;
+        } while(!is_avaialable(row, col) || try_direction <= 8); // If i, j occupied, get new set
+        
+        if (is_avaialable(row, col)) {
+            // place the prey on board
+            _board[row][col] = new Preditor(row, col);
+        }
     }
 }
 

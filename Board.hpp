@@ -38,7 +38,7 @@ public:
 //    void store_flag(int i, int j);
     vector<Organism*> i_moved(Organism* me); //container for all the moved pieces
     bool has_moved(Organism* o, vector<Organism*>& v); //if Organism has moved, don't move
-    bool has_empty(); // if there is empty space on board, then return true
+    bool board_has_empty(); // if there is empty space on board, then return true
     
 private:
     Organism* _board[ROW][COL];
