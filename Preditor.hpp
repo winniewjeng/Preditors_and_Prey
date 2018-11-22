@@ -5,7 +5,7 @@
 #ifndef Preditor_hpp
 #define Preditor_hpp
 #include "Organism.hpp"
-//#include <vector>
+#include <vector>
 #include <iostream>
 using namespace std;
 class Organism;

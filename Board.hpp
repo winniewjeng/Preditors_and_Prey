@@ -8,8 +8,8 @@
 #include <cstdlib>
 #include <ctime>
 
-const int ROW = 22;
-const int COL = 22;
+const int ROW = 15;
+const int COL = 15;
 
 class Organism;
 

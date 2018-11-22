@@ -154,14 +154,14 @@ void Board::breed_prey(int num_preys) {
         
         if (is_avaialable(row, col)) {
             _board[row][col] = new Prey(row, col);
-        } else if (board_has_empty()) {
-            cout << "boop" << endl;
-//            while (!is_avaialable(row, col)) {
-//                row = rand() % (ROW - 1) + 1;
-//                col = rand() % (COL - 1) + 1;
-//            }
-//            _board[row][col] = new Prey(row, col);
         }
+////            else if (board_has_empty()) {
+////            while (!is_avaialable(row, col)) {
+////                row = rand() % (ROW - 1) + 1;
+////                col = rand() % (COL - 1) + 1;
+////            }
+////            _board[row][col] = new Prey(row, col);
+//        }
     }
     
 }
